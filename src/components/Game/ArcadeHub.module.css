@@ -41,19 +41,22 @@
   border-radius: var(--radius-full);
   padding: 4px;
   gap: 4px;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .tabBtn {
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  white-space: nowrap;
   transition: all var(--transition-fast);
 }
 
@@ -61,16 +64,22 @@
   color: #ffffff;
 }
 
-.activeTab {
+.activeGold {
   background: var(--gold-gradient);
   color: #0f172a;
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
 }
 
-.activeTabAlt {
+.activeBlue {
   background: linear-gradient(135deg, #38bdf8, #2563eb);
   color: #ffffff;
   box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+}
+
+.activePurple {
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
 }
 
 .gameCardContainer {
