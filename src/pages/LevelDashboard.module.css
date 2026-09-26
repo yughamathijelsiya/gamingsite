@@ -1,0 +1,82 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.mainContent {
+  flex: 1;
+}
+
+/* Ambient background lights */
+.ambientTopGlow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 350px;
+  background: radial-gradient(ellipse at top, rgba(129, 140, 248, 0.08) 0%, rgba(245, 158, 11, 0.04) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(18, 20, 34, 0.8);
+  padding: 36px 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footerBrand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.footerRight {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footerLink {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  transition: color var(--transition-fast);
+}
+
+.footerLink:hover {
+  color: var(--gold-light);
+}
+
+.disclaimerBanner {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 14px;
+  line-height: 1.5;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 12px;
+}
