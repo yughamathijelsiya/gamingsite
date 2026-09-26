@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Sparkles,
   Trophy,
@@ -63,10 +63,22 @@ export default function CryptoCrush({ onGoToConverter }) {
   const [combos, setCombos] = useState(0);
   const [hasClaimed, setHasClaimed] = useState(false);
 
+  // Animation States
+  const [swappingState, setSwappingState] = useState(null); // { a: {r, c, dir}, b: {r, c, dir}, isInvalid: bool }
+  const [poppingTiles, setPoppingTiles] = useState(new Set());
+  const [droppingTiles, setDroppingTiles] = useState(new Set());
+  const [comboToast, setComboToast] = useState('');
+  const [isLocked, setIsLocked] = useState(false);
+
   const startGame = () => {
     soundManager.playClick();
     setBoard(createInitialBoard());
     setSelectedTile(null);
+    setSwappingState(null);
+    setPoppingTiles(new Set());
+    setDroppingTiles(new Set());
+    setComboToast('');
+    setIsLocked(false);
     setMovesLeft(15);
     setScore(0);
     setCombos(0);
@@ -112,6 +124,7 @@ export default function CryptoCrush({ onGoToConverter }) {
   const applyGravity = useCallback((b, matched) => {
     let clearedCount = 0;
     const newBoard = b.map((row) => [...row]);
+    const droppedKeys = new Set();
 
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
@@ -130,21 +143,25 @@ export default function CryptoCrush({ onGoToConverter }) {
           const val = newBoard[r][c];
           newBoard[r][c] = null;
           newBoard[emptyRow][c] = val;
+          if (emptyRow !== r) {
+            droppedKeys.add(`${emptyRow}-${c}`);
+          }
           emptyRow--;
         }
       }
       // Fill remaining empty spots at top
       for (let r = emptyRow; r >= 0; r--) {
         newBoard[r][c] = TOKEN_TYPES[Math.floor(Math.random() * TOKEN_TYPES.length)];
+        droppedKeys.add(`${r}-${c}`);
       }
     }
 
-    return { newBoard, clearedCount };
+    return { newBoard, clearedCount, droppedKeys };
   }, []);
 
-  // Handle Tile Click
+  // Handle Tile Click & Trigger Tactile Swap Animation
   const handleTileClick = (r, c) => {
-    if (gameState !== 'playing' || movesLeft <= 0) return;
+    if (gameState !== 'playing' || movesLeft <= 0 || isLocked) return;
 
     if (!selectedTile) {
       soundManager.playClick();
@@ -152,76 +169,150 @@ export default function CryptoCrush({ onGoToConverter }) {
       return;
     }
 
-    // Check if clicked tile is adjacent
-    const dr = Math.abs(selectedTile.r - r);
-    const dc = Math.abs(selectedTile.c - c);
-    const isAdjacent = (dr === 1 && dc === 0) || (dr === 0 && dc === 1);
-
-    if (!isAdjacent) {
-      // Re-select new tile
-      soundManager.playClick();
-      setSelectedTile({ r, c });
-      return;
-    }
-
-    // Swap tiles
-    const swapped = board.map((row) => [...row]);
-    const temp = swapped[selectedTile.r][selectedTile.c];
-    swapped[selectedTile.r][selectedTile.c] = swapped[r][c];
-    swapped[r][c] = temp;
-
-    // Check if swap produces a match
-    const { matched, matchFound } = findMatches(swapped);
-
-    if (!matchFound) {
-      // Invalid swap - shake/no-op
+    // Clicking the same tile deselects
+    if (selectedTile.r === r && selectedTile.c === c) {
       soundManager.playClick();
       setSelectedTile(null);
       return;
     }
 
-    // Valid Match! Deduct a move
+    // Check if clicked tile is adjacent
+    const dr = r - selectedTile.r;
+    const dc = c - selectedTile.c;
+    const isAdjacent = Math.abs(dr) + Math.abs(dc) === 1;
+
+    if (!isAdjacent) {
+      // Re-select newly clicked tile
+      soundManager.playClick();
+      setSelectedTile({ r, c });
+      return;
+    }
+
+    // Compute visual sliding direction
+    let dirA = 'right';
+    let dirB = 'left';
+    if (dc === 1) {
+      dirA = 'right';
+      dirB = 'left';
+    } else if (dc === -1) {
+      dirA = 'left';
+      dirB = 'right';
+    } else if (dr === 1) {
+      dirA = 'down';
+      dirB = 'up';
+    } else if (dr === -1) {
+      dirA = 'up';
+      dirB = 'down';
+    }
+
+    const tileA = { r: selectedTile.r, c: selectedTile.c, dir: dirA };
+    const tileB = { r, c, dir: dirB };
+
+    // Lock board and trigger smooth slide animation
+    setIsLocked(true);
     setSelectedTile(null);
-    soundManager.playCoinCatch();
+    setSwappingState({ a: tileA, b: tileB, isInvalid: false });
+    soundManager.playSlideSound();
 
-    // Process cascade
-    let currentBoard = swapped;
-    let currentMatches = matched;
-    let totalCleared = 0;
-    let cascadeStreak = 0;
+    // After slide transition (220ms), check matches
+    setTimeout(() => {
+      // Perform logical swap
+      const swapped = board.map((row) => [...row]);
+      const temp = swapped[tileA.r][tileA.c];
+      swapped[tileA.r][tileA.c] = swapped[tileB.r][tileB.c];
+      swapped[tileB.r][tileB.c] = temp;
 
-    while (true) {
-      const { newBoard, clearedCount } = applyGravity(currentBoard, currentMatches);
-      totalCleared += clearedCount;
-      cascadeStreak++;
+      const { matched, matchFound } = findMatches(swapped);
 
-      // Check next cascade
-      const next = findMatches(newBoard);
-      if (!next.matchFound || cascadeStreak > 5) {
-        currentBoard = newBoard;
-        break;
+      if (!matchFound) {
+        // INVALID SWAP: Revert animation
+        soundManager.playHazardHit();
+        setSwappingState({ a: tileA, b: tileB, isInvalid: true });
+
+        setTimeout(() => {
+          setSwappingState(null);
+          setIsLocked(false);
+        }, 260);
+        return;
       }
-      currentBoard = newBoard;
-      currentMatches = next.matched;
-    }
 
-    const earnedPoints = totalCleared * 15 * cascadeStreak;
-    if (cascadeStreak > 1) {
-      soundManager.playSpecialOrb();
-      setCombos((prev) => prev + 1);
-    }
+      // VALID MATCH! Clear swapping state and update board
+      setSwappingState(null);
+      setBoard(swapped);
 
-    setBoard(currentBoard);
-    setScore((prev) => prev + earnedPoints);
-    const remainingMoves = movesLeft - 1;
-    setMovesLeft(remainingMoves);
+      // Collect matched keys for explode pop animation
+      const matchedKeys = new Set();
+      for (let ri = 0; ri < ROWS; ri++) {
+        for (let ci = 0; ci < COLS; ci++) {
+          if (matched[ri][ci]) matchedKeys.add(`${ri}-${ci}`);
+        }
+      }
 
-    if (remainingMoves <= 0) {
+      setPoppingTiles(matchedKeys);
+      soundManager.playCoinCatch();
+
+      // Wait for explode pop (260ms) before gravity drop
       setTimeout(() => {
-        setGameState('completed');
-        soundManager.playLevelUp();
-      }, 500);
-    }
+        let currentBoard = swapped;
+        let currentMatches = matched;
+        let totalCleared = 0;
+        let cascadeCount = 0;
+
+        // Execute cascades
+        const processCascades = (b, m) => {
+          const { newBoard, clearedCount, droppedKeys } = applyGravity(b, m);
+          totalCleared += clearedCount;
+          cascadeCount++;
+
+          setBoard(newBoard);
+          setDroppingTiles(droppedKeys);
+          setPoppingTiles(new Set());
+
+          if (cascadeCount > 1) {
+            soundManager.playSpecialOrb();
+            setCombos((prev) => prev + 1);
+            setComboToast(cascadeCount === 2 ? '⚡ SWEET COMBO!' : '🔥 MEGA CRUSH!');
+            setTimeout(() => setComboToast(''), 1500);
+          }
+
+          // Check for next cascade
+          const next = findMatches(newBoard);
+          if (next.matchFound && cascadeCount < 5) {
+            const nextKeys = new Set();
+            for (let ri = 0; ri < ROWS; ri++) {
+              for (let ci = 0; ci < COLS; ci++) {
+                if (next.matched[ri][ci]) nextKeys.add(`${ri}-${ci}`);
+              }
+            }
+            setTimeout(() => {
+              setPoppingTiles(nextKeys);
+              soundManager.playCoinCatch();
+              setTimeout(() => {
+                processCascades(newBoard, next.matched);
+              }, 260);
+            }, 280);
+          } else {
+            // Cascade sequence finished
+            const earnedPoints = totalCleared * 20 * Math.max(1, cascadeCount);
+            setScore((prev) => prev + earnedPoints);
+            const remainingMoves = movesLeft - 1;
+            setMovesLeft(remainingMoves);
+
+            setTimeout(() => {
+              setDroppingTiles(new Set());
+              setIsLocked(false);
+
+              if (remainingMoves <= 0) {
+                setGameState('completed');
+                soundManager.playLevelUp();
+              }
+            }, 300);
+          }
+        };
+
+        processCascades(currentBoard, currentMatches);
+      }, 260);
+    }, 220);
   };
 
   const handleClaim = () => {
@@ -229,6 +320,42 @@ export default function CryptoCrush({ onGoToConverter }) {
     const xpEarned = Math.floor(score * 0.25);
     recordGameResult(score, Math.floor(score / 20), xpEarned, 'Crypto Crush Match-3');
     setHasClaimed(true);
+  };
+
+  // Helper to determine active animation class for a tile
+  const getTileAnimClass = (r, c) => {
+    const key = `${r}-${c}`;
+
+    if (poppingTiles.has(key)) {
+      return styles.poppingTile;
+    }
+    if (droppingTiles.has(key)) {
+      return styles.droppingTile;
+    }
+
+    if (swappingState) {
+      const { a, b, isInvalid } = swappingState;
+      if (isInvalid) {
+        if ((a.r === r && a.c === c) || (b.r === r && b.c === c)) {
+          return styles.invalidWobble;
+        }
+      }
+
+      if (a.r === r && a.c === c) {
+        if (a.dir === 'right') return styles.swappingToRight;
+        if (a.dir === 'left') return styles.swappingToLeft;
+        if (a.dir === 'down') return styles.swappingToDown;
+        if (a.dir === 'up') return styles.swappingToUp;
+      }
+      if (b.r === r && b.c === c) {
+        if (b.dir === 'right') return styles.swappingToRight;
+        if (b.dir === 'left') return styles.swappingToLeft;
+        if (b.dir === 'down') return styles.swappingToDown;
+        if (b.dir === 'up') return styles.swappingToUp;
+      }
+    }
+
+    return '';
   };
 
   return (
@@ -308,6 +435,13 @@ export default function CryptoCrush({ onGoToConverter }) {
       {/* STATE 2: Playing Board */}
       {gameState === 'playing' && (
         <div className={styles.arenaContainer}>
+          {/* Combo Toast Alert */}
+          {comboToast && (
+            <div className={styles.comboToast}>
+              {comboToast}
+            </div>
+          )}
+
           {/* HUD */}
           <div className={styles.gameHud}>
             <div className={styles.hudItem}>
@@ -337,12 +471,14 @@ export default function CryptoCrush({ onGoToConverter }) {
             {board.map((row, r) =>
               row.map((token, c) => {
                 const isSelected = selectedTile?.r === r && selectedTile?.c === c;
+                const animClass = getTileAnimClass(r, c);
+
                 return (
                   <button
                     key={`${r}-${c}`}
                     className={`${styles.tile} ${TOKEN_CLASSES[token]} ${
                       isSelected ? styles.selectedTile : ''
-                    }`}
+                    } ${animClass}`}
                     onClick={() => handleTileClick(r, c)}
                     aria-label={`Row ${r + 1}, Column ${c + 1}: ${token}`}
                   >

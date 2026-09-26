@@ -185,6 +185,7 @@
   flex-direction: column;
   align-items: center;
   gap: 18px;
+  position: relative;
 }
 
 .gameHud {
@@ -219,18 +220,45 @@
   color: #ffffff;
 }
 
+/* Combo Toast Alert */
+.comboToast {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #f59e0b, #ec4899);
+  color: #ffffff;
+  padding: 6px 18px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+  animation: bouncePop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes bouncePop {
+  0% { transform: translateX(-50%) scale(0.6); opacity: 0; }
+  60% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
 /* 7x7 Board */
 .boardWrapper {
   background: #0f1220;
-  border: 2px solid rgba(245, 158, 11, 0.4);
+  border: 2px solid rgba(245, 158, 11, 0.45);
   border-radius: var(--radius-lg);
-  padding: 12px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  padding: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(245, 158, 11, 0.05);
   display: grid;
   grid-template-columns: repeat(7, 54px);
   grid-template-rows: repeat(7, 54px);
   gap: 6px;
   user-select: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .tile {
@@ -241,9 +269,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   position: relative;
   font-size: 1.5rem;
+  transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+  will-change: transform, opacity;
 }
 
 .tile:hover {
@@ -251,36 +280,120 @@
 }
 
 .selectedTile {
-  transform: scale(1.12);
-  outline: 2px solid #ffffff;
-  box-shadow: 0 0 18px #ffffff;
-  z-index: 2;
+  transform: scale(1.14) !important;
+  outline: 3px solid #ffffff;
+  box-shadow: 0 0 20px #ffffff, 0 0 30px rgba(245, 158, 11, 0.6) !important;
+  z-index: 5;
+  animation: pulseGlow 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1.14); }
+  50% { transform: scale(1.18); }
+}
+
+/* Smooth Element Swapping Motion */
+.swappingToRight {
+  transform: translateX(60px) scale(1.05) !important;
+  z-index: 4;
+}
+
+.swappingToLeft {
+  transform: translateX(-60px) scale(1.05) !important;
+  z-index: 4;
+}
+
+.swappingToDown {
+  transform: translateY(60px) scale(1.05) !important;
+  z-index: 4;
+}
+
+.swappingToUp {
+  transform: translateY(-60px) scale(1.05) !important;
+  z-index: 4;
+}
+
+/* Popping / Exploding Matched Tiles Animation */
+.poppingTile {
+  animation: explodePop 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  z-index: 6;
+}
+
+@keyframes explodePop {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.35) rotate(8deg);
+    filter: brightness(2) drop-shadow(0 0 16px #ffffff);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.2) rotate(-12deg);
+    filter: brightness(3);
+    opacity: 0;
+  }
+}
+
+/* Dropping gravity bounce on new tiles */
+.droppingTile {
+  animation: dropGravity 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+@keyframes dropGravity {
+  0% {
+    transform: translateY(-40px);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Invalid Swap Wobble/Shake */
+.invalidWobble {
+  animation: shakeBack 0.3s ease-in-out;
+}
+
+@keyframes shakeBack {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-4px); }
 }
 
 /* Tile color variants */
 .tileGold {
   background: radial-gradient(circle, #fde68a 0%, #f59e0b 60%, #b45309 100%);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(254, 240, 138, 0.5);
 }
 
 .tileSapphire {
   background: radial-gradient(circle, #bae6fd 0%, #38bdf8 60%, #0369a1 100%);
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+  border: 1px solid rgba(186, 230, 253, 0.5);
 }
 
 .tileRuby {
   background: radial-gradient(circle, #fecaca 0%, #ef4444 60%, #991b1b 100%);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+  border: 1px solid rgba(254, 202, 202, 0.5);
 }
 
 .tileAmethyst {
   background: radial-gradient(circle, #e9d5ff 0%, #a855f7 60%, #6b21a8 100%);
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.35);
+  border: 1px solid rgba(233, 213, 255, 0.5);
 }
 
 .tileEmerald {
   background: radial-gradient(circle, #a7f3d0 0%, #10b981 60%, #047857 100%);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  border: 1px solid rgba(167, 243, 208, 0.5);
 }
 
 /* Completion Screen */
@@ -355,5 +468,17 @@
     width: 40px;
     height: 40px;
     font-size: 1.1rem;
+  }
+  .swappingToRight {
+    transform: translateX(44px) scale(1.05) !important;
+  }
+  .swappingToLeft {
+    transform: translateX(-44px) scale(1.05) !important;
+  }
+  .swappingToDown {
+    transform: translateY(44px) scale(1.05) !important;
+  }
+  .swappingToUp {
+    transform: translateY(-44px) scale(1.05) !important;
   }
 }
