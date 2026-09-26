@@ -1,11 +1,11 @@
 import React from 'react';
-import { Sparkles, Volume2, VolumeX, Shield, Wrench, Check } from 'lucide-react';
+import { Sparkles, Volume2, VolumeX, Shield, Wrench, Check, Coins, Repeat, Gamepad2 } from 'lucide-react';
 import { useRewards } from '../../context/RewardsContext';
 import Tooltip from '../Tooltip/Tooltip';
 import styles from './Navbar.module.css';
 
 export default function Navbar({ onToggleDemoTools, showDemoTools }) {
-  const { currentXp, currentLevel, isSoundMuted, toggleSound } = useRewards();
+  const { currentXp, veCoinsBalance, currentLevel, isSoundMuted, toggleSound } = useRewards();
 
   return (
     <header className={styles.navbar}>
@@ -18,7 +18,7 @@ export default function Navbar({ onToggleDemoTools, showDemoTools }) {
             </div>
             <div className={styles.brandText}>
               <span className={styles.brandName}>VELOOP</span>
-              <span className={styles.brandTag}>Rewards & Level Hub</span>
+              <span className={styles.brandTag}>Rewards & Arcade Hub</span>
             </div>
           </a>
 
@@ -27,13 +27,26 @@ export default function Navbar({ onToggleDemoTools, showDemoTools }) {
             <a href="#hero" className={`${styles.navLink} ${styles.active}`}>Overview</a>
             <a href="#next-reward" className={styles.navLink}>Next Reward</a>
             <a href="#roadmap" className={styles.navLink}>Roadmap</a>
-            <a href="#play-earn" className={styles.navLink}>VE Coin Catch</a>
+            <a href="#arcade-games" className={styles.navLink}>Arcade Games</a>
+            <a href="#points-converter" className={styles.navLink}>Convert Points</a>
             <a href="#earning-hub" className={styles.navLink}>Earn XP</a>
             <a href="#activity-feed" className={styles.navLink}>Activity</a>
           </nav>
 
           {/* Right Actions */}
           <div className={styles.navActions}>
+            {/* Live VE Coins Balance */}
+            <a href="#points-converter" style={{ textDecoration: 'none' }}>
+              <div
+                className={styles.xpBadge}
+                style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.4)', color: '#fbbf24' }}
+                title="VE Coins Balance (Click to open converter)"
+              >
+                <Coins size={14} />
+                <span>{veCoinsBalance.toLocaleString()} Coins</span>
+              </div>
+            </a>
+
             {/* Live XP Badge */}
             <div className={styles.xpBadge} title="Current Total XP">
               <Sparkles size={14} />

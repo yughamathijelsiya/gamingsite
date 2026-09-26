@@ -30,10 +30,32 @@ export function RewardsProvider({ children }) {
         const parsed = JSON.parse(saved);
         return typeof parsed.currentXp === 'number' ? parsed.currentXp : INITIAL_USER_XP;
       }
-    } catch {
-      // fallback
-    }
+    } catch {}
     return INITIAL_USER_XP;
+  });
+
+  // VE Coins Wallet Balance (spendable on rewards shop & payouts)
+  const [veCoinsBalance, setVeCoinsBalance] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (typeof parsed.veCoinsBalance === 'number') return parsed.veCoinsBalance;
+      }
+    } catch {}
+    return 1420; // Default wallet coins
+  });
+
+  // Game Points Pool (earned from arcade games, convertible to Coins & XP)
+  const [gamePointsBalance, setGamePointsBalance] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (typeof parsed.gamePointsBalance === 'number') return parsed.gamePointsBalance;
+      }
+    } catch {}
+    return 850; // Initial arcade points ready to convert
   });
 
   const [dailyTasks, setDailyTasks] = useState(() => {
@@ -114,6 +136,7 @@ export function RewardsProvider({ children }) {
       dailyPlaysLeft: 3,
       highScore: 320,
       totalCoinsCaught: 84,
+      subwayBestDistance: 940,
       lastPlayed: null
     };
   });
@@ -143,6 +166,8 @@ export function RewardsProvider({ children }) {
     try {
       const stateToPersist = {
         currentXp,
+        veCoinsBalance,
+        gamePointsBalance,
         dailyTasks,
         dailyChallenge,
         streakData,
@@ -157,6 +182,8 @@ export function RewardsProvider({ children }) {
     }
   }, [
     currentXp,
+    veCoinsBalance,
+    gamePointsBalance,
     dailyTasks,
     dailyChallenge,
     streakData,
@@ -211,6 +238,93 @@ export function RewardsProvider({ children }) {
       setActivityLedger((prev) => [newEntry, ...prev.slice(0, 19)]);
     },
     []
+  );
+
+  // Add Arcade Game Points
+  const addGamePoints = useCallback((points, source = 'Game') => {
+    setGamePointsBalance((prev) => prev + points);
+    // Also record small activity if needed
+  }, []);
+
+  // Convert Points to VE Coins and Dashboard XP!
+  // Rate: Every 100 points = 10 VE Coins + 25 XP
+  const convertPoints = useCallback(
+    (pointsToConvert) => {
+      const validPoints = Math.min(pointsToConvert, gamePointsBalance);
+      if (validPoints <= 0) return { coinsGained: 0, xpGained: 0 };
+
+      const coinsGained = Math.floor(validPoints * 0.1); // 10%
+      const xpGained = Math.floor(validPoints * 0.25);   // 25%
+
+      soundManager.playConvertSound();
+
+      // Deduct points
+      setGamePointsBalance((prev) => prev - validPoints);
+
+      // Add VE Coins
+      setVeCoinsBalance((prev) => prev + coinsGained);
+
+      // Add XP & check level up
+      setCurrentXp((prevXp) => {
+        const oldLevel = getLevelForXp(prevXp);
+        const newXp = prevXp + xpGained;
+        const newLevel = getLevelForXp(newXp);
+
+        if (newLevel.level > oldLevel.level) {
+          soundManager.playLevelUp();
+          setLevelUpDetails({
+            newLevel,
+            oldLevel,
+            reward: newLevel.rewardTitle,
+            rewardValue: newLevel.rewardValue
+          });
+          setIsLevelUpModalOpen(true);
+        }
+
+        return newXp;
+      });
+
+      // Add transaction to activity ledger
+      const newEntry = {
+        id: `act_${Date.now()}`,
+        title: `Point Exchange: ${validPoints} pts → ${coinsGained} VE Coins + ${xpGained} XP`,
+        category: 'Exchange',
+        xpDelta: xpGained,
+        coinsDelta: coinsGained,
+        timestamp: 'Just now',
+        status: 'Verified',
+        iconType: 'Coins'
+      };
+
+      setActivityLedger((prev) => [newEntry, ...prev.slice(0, 19)]);
+
+      return { coinsGained, xpGained };
+    },
+    [gamePointsBalance]
+  );
+
+  // Redeem item in rewards shop using VE Coins
+  const redeemShopItem = useCallback(
+    (itemId, itemTitle, costCoins) => {
+      if (veCoinsBalance < costCoins) return false;
+
+      soundManager.playClaimReward();
+      setVeCoinsBalance((prev) => prev - costCoins);
+
+      const newEntry = {
+        id: `act_${Date.now()}`,
+        title: `Redeemed: ${itemTitle} (-${costCoins} Coins)`,
+        category: 'Shop',
+        xpDelta: 0,
+        timestamp: 'Just now',
+        status: 'Fulfilled',
+        iconType: 'Gift'
+      };
+
+      setActivityLedger((prev) => [newEntry, ...prev.slice(0, 19)]);
+      return true;
+    },
+    [veCoinsBalance]
   );
 
   // Claim Daily Task
@@ -293,9 +407,12 @@ export function RewardsProvider({ children }) {
     [bonusMissions, addXp]
   );
 
-  // Record Mini-Game Result
+  // Record Mini-Game Result (VE Coin Catch or Subway Runner)
   const recordGameResult = useCallback(
-    (score, coinsCaught, xpEarned) => {
+    (score, coinsCaught, xpEarned, gameName = 'VE Coin Catch') => {
+      // Award game points directly to the converter pool
+      setGamePointsBalance((prev) => prev + score);
+
       setGameStats((prev) => ({
         ...prev,
         dailyPlaysLeft: Math.max(0, prev.dailyPlaysLeft - 1),
@@ -320,7 +437,7 @@ export function RewardsProvider({ children }) {
       }
 
       // Add earned game XP
-      addXp(xpEarned, `VE Coin Catch (${score} pts)`, 'Game');
+      addXp(xpEarned, `${gameName} (${score} pts)`, 'Game');
     },
     [dailyChallenge.targetScore, dailyChallenge.isUnlocked, addXp]
   );
@@ -345,6 +462,8 @@ export function RewardsProvider({ children }) {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
     setCurrentXp(INITIAL_USER_XP);
+    setVeCoinsBalance(1420);
+    setGamePointsBalance(850);
     setDailyTasks(INITIAL_DAILY_TASKS);
     setDailyChallenge(INITIAL_DAILY_CHALLENGE);
     setStreakData(INITIAL_STREAK_DATA);
@@ -355,6 +474,7 @@ export function RewardsProvider({ children }) {
       dailyPlaysLeft: 3,
       highScore: 320,
       totalCoinsCaught: 84,
+      subwayBestDistance: 940,
       lastPlayed: null
     });
     setHasSimulatedError(false);
@@ -375,8 +495,14 @@ export function RewardsProvider({ children }) {
   }, []);
 
   const value = {
-    // Progress
+    // Progress & Currencies
     currentXp,
+    veCoinsBalance,
+    gamePointsBalance,
+    addGamePoints,
+    convertPoints,
+    redeemShopItem,
+
     currentLevel,
     nextLevel,
     progressPercent,
@@ -396,7 +522,7 @@ export function RewardsProvider({ children }) {
     watchAndEarn,
     claimWatchAndEarn,
 
-    // Mini-Game
+    // Mini-Games & Arcade
     gameStats,
     recordGameResult,
     resetGamePlays,

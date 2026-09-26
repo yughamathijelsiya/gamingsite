@@ -5,8 +5,8 @@ import {
   TrendingUp,
   Zap,
   Shield,
-  Percent,
-  CheckCircle2,
+  Coins,
+  Repeat,
   Info
 } from 'lucide-react';
 import { useRewards } from '../../context/RewardsContext';
@@ -17,6 +17,8 @@ import styles from './LevelHero.module.css';
 export default function LevelHero() {
   const {
     currentXp,
+    veCoinsBalance,
+    gamePointsBalance,
     currentLevel,
     nextLevel,
     progressPercent,
@@ -27,7 +29,6 @@ export default function LevelHero() {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   useEffect(() => {
-    // Initial animation trigger
     const timer = setTimeout(() => {
       setAnimatedProgress(progressPercent);
     }, 150);
@@ -92,7 +93,7 @@ export default function LevelHero() {
               </div>
 
               <p className={styles.heroSubtitle}>
-                Accumulate XP through skill-based mini-games, daily tasks, and fintech missions to elevate your standing and unlock exclusive financial rewards.
+                Play skill-based arcade games like <strong>Cyber Surfers</strong> and <strong>VE Coin Catch</strong>, convert your game points into <strong>VE Coins & XP</strong>, and unlock tier privileges.
               </p>
 
               {/* Progress Bar Section */}
@@ -171,37 +172,37 @@ export default function LevelHero() {
             </div>
 
             <div className={styles.metricCard}>
+              <div className={styles.metricIcon} style={{ color: '#fbbf24' }}>
+                <Coins size={18} />
+              </div>
+              <div className={styles.metricContent}>
+                <span className={styles.metricLabel}>VE Coins Wallet</span>
+                <span className={styles.metricValue} style={{ color: '#fbbf24' }}>
+                  {veCoinsBalance.toLocaleString()}
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.metricCard}>
+              <div className={styles.metricIcon} style={{ color: '#38bdf8' }}>
+                <Zap size={18} />
+              </div>
+              <div className={styles.metricContent}>
+                <span className={styles.metricLabel}>Arcade Points</span>
+                <span className={styles.metricValue} style={{ color: '#38bdf8' }}>
+                  {gamePointsBalance.toLocaleString()} pts
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.metricCard}>
               <div className={styles.metricIcon}>
                 <TrendingUp size={18} />
               </div>
               <div className={styles.metricContent}>
-                <span className={styles.metricLabel}>XP to Level {nextLevel ? nextLevel.level : 'Max'}</span>
-                <span className={styles.metricValue}>
-                  {remainingXp.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            <div className={styles.metricCard}>
-              <div className={styles.metricIcon}>
-                <Zap size={18} />
-              </div>
-              <div className={styles.metricContent}>
-                <span className={styles.metricLabel}>Active Multiplier</span>
+                <span className={styles.metricLabel}>Tier Multiplier</span>
                 <span className={styles.metricValue}>
                   {tierMultiplier}x Boost
-                </span>
-              </div>
-            </div>
-
-            <div className={styles.metricCard}>
-              <div className={styles.metricIcon}>
-                <Shield size={18} />
-              </div>
-              <div className={styles.metricContent}>
-                <span className={styles.metricLabel}>Prestige Standing</span>
-                <span className={styles.metricValue}>
-                  Top 8% Member
                 </span>
               </div>
             </div>
@@ -212,11 +213,11 @@ export default function LevelHero() {
             <div className={styles.actionBannerText}>
               <Sparkles size={16} color="#38bdf8" />
               <span>
-                <strong>Next Best Action:</strong> Play <strong>VE Coin Catch</strong> today or claim your <strong>Day 4 Streak Bonus (+100 XP)</strong> to accelerate your progress toward Level 5.
+                <strong>Next Best Action:</strong> You have <strong>{gamePointsBalance} arcade points</strong> ready! Convert them in the <strong>Points Converter</strong> to claim <strong>+{Math.floor(gamePointsBalance * 0.1)} VE Coins</strong> and <strong>+{Math.floor(gamePointsBalance * 0.25)} XP</strong>.
               </span>
             </div>
-            <a href="#play-earn" className={styles.actionBannerBtn}>
-              Play VE Coin Catch
+            <a href="#points-converter" className={styles.actionBannerBtn}>
+              Convert Points Now
             </a>
           </div>
         </div>
