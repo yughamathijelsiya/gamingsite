@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import DemoToolbar from '../components/DemoToolbar/DemoToolbar';
+import HeroBanner from '../components/HeroBanner/HeroBanner';
 import LevelHero from '../components/LevelHero/LevelHero';
 import NextRewardCard from '../components/NextRewardCard/NextRewardCard';
 import LevelRoadmap from '../components/LevelRoadmap/LevelRoadmap';
@@ -50,6 +51,9 @@ export default function LevelDashboard() {
           <SkeletonLoader />
         ) : (
           <>
+            {/* Redesigned World-Class Hero Banner */}
+            <HeroBanner />
+            {/* Redesigned Level Status & Tier Progression Section */}
             <LevelHero />
             <NextRewardCard />
             <LevelRoadmap />

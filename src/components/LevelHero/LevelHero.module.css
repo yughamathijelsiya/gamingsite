@@ -1,58 +1,158 @@
-.heroSection {
-  padding: 32px 0 20px 0;
+/* Level Progression Section Master Styles */
+.levelSection {
+  padding: 32px 0 24px 0;
   position: relative;
+  width: 100%;
 }
 
-.heroCard {
-  background: linear-gradient(135deg, rgba(31, 36, 61, 0.95) 0%, rgba(22, 25, 43, 0.95) 100%);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-xl);
-  padding: 32px;
+/* Section Header */
+.sectionTopHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.sectionHeaderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 680px;
+}
+
+.sectionTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  width: fit-content;
+}
+
+.sectionTagIcon {
+  color: #38bdf8;
+}
+
+.sectionMainTitle {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sectionDesc {
+  color: #94a3b8;
+  font-size: 0.92rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.viewRoadmapBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewRoadmapBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Master Level Progression Card */
+.masterCard {
+  background: linear-gradient(145deg, rgba(25, 30, 56, 0.95) 0%, rgba(18, 21, 38, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 36px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(245, 158, 11, 0.05);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(56, 189, 248, 0.04);
 }
 
-.ambientBackdrop {
+.ambientAura {
   position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(129, 140, 248, 0.05) 50%, transparent 70%);
-  filter: blur(40px);
+  top: -120px;
+  left: -80px;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(129, 140, 248, 0.06) 40%, transparent 70%);
+  filter: blur(50px);
   pointer-events: none;
-  animation: ambientGlow 8s ease-in-out infinite;
 }
 
-.heroGrid {
+.ambientGlowSecondary {
+  position: absolute;
+  bottom: -100px;
+  right: -50px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 65%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+/* Top Master Grid */
+.masterGrid {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
   align-items: center;
-  gap: 32px;
   position: relative;
   z-index: 2;
 }
 
-/* Level Crest Badge */
-.crestContainer {
-  position: relative;
+/* Left Column: 3D Crest & Identity Showcase */
+.crestShowcaseCol {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  text-align: center;
+  padding-right: 28px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.crestGlowRing {
-  position: absolute;
+.crestWrapper {
+  position: relative;
   width: 140px;
   height: 140px;
-  border-radius: 50%;
-  border: 2px dashed rgba(245, 158, 11, 0.35);
-  animation: rotateRing 25s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
-@keyframes rotateRing {
+.crestOrbitalRing {
+  position: absolute;
+  width: 154px;
+  height: 154px;
+  border-radius: 50%;
+  border: 2px dashed rgba(245, 158, 11, 0.35);
+  animation: rotateOrbital 24s linear infinite;
+}
+
+@keyframes rotateOrbital {
   from {
     transform: rotate(0deg);
   }
@@ -61,170 +161,333 @@
   }
 }
 
-.crestImageWrapper {
-  width: 110px;
-  height: 110px;
+.crestOrbitalGlow {
+  position: absolute;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  padding: 4px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.6), rgba(255, 255, 255, 0.1), rgba(129, 140, 248, 0.4));
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 158, 11, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(56, 189, 248, 0.15) 50%, transparent 70%);
+  filter: blur(12px);
+  animation: pulseGlow 4s ease-in-out infinite;
 }
 
-.crestImg {
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.crestImgContainer {
+  width: 120px;
+  height: 120px;
+  border-radius: 26px;
+  padding: 3px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.8), rgba(255, 255, 255, 0.2), rgba(56, 189, 248, 0.8));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.25);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.crest3dImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 23px;
+  display: block;
 }
 
-.tierPillBottom {
-  margin-top: 10px;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  color: var(--gold-light);
+.levelBadgeRibbon {
+  position: absolute;
+  bottom: -6px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #1e243d 0%, #0f1326 100%);
+  border: 1px solid rgba(245, 158, 11, 0.6);
+  color: #fbbf24;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
 }
 
-/* Hero Center Details */
-.heroDetails {
+.crownIcon {
+  color: #fbbf24;
+}
+
+/* Tier Identity Group */
+.tierIdentityGroup {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
-.badgeRow {
+.tierTagRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
 }
 
-.statusIndicator {
+.tierPill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 3px 9px;
+  border-radius: 9999px;
+}
+
+.verifiedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.tierNameDisplay {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 1.45rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.activeBoostBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  color: #7dd3fc;
+}
+
+.activeBoostBadge strong {
+  color: #ffffff;
+}
+
+/* Perks mini chips */
+.perksChipList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.perkChip {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.75rem;
-  color: var(--accent-green);
-  background: rgba(52, 211, 153, 0.1);
-  border: 1px solid rgba(52, 211, 153, 0.25);
-  padding: 3px 8px;
-  border-radius: var(--radius-full);
-  font-weight: 600;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: left;
 }
 
-.pulseDot {
+.perkChipDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #38bdf8;
+  flex-shrink: 0;
+}
+
+.inspectPerksBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inspectPerksBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Right Column: Advanced Progress Cockpit */
+.progressCockpitCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cockpitStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.statusIndicatorWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.pulseDotGreen {
   width: 6px;
   height: 6px;
-  background: var(--accent-green);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-green);
-  animation: pulseGreen 2s infinite;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  animation: pulseGreen 1.8s infinite;
 }
 
 @keyframes pulseGreen {
   0%, 100% {
-    opacity: 1;
     transform: scale(1);
+    opacity: 1;
   }
   50% {
-    opacity: 0.4;
-    transform: scale(0.8);
+    transform: scale(1.3);
+    opacity: 0.5;
   }
 }
 
-.levelTitleGroup {
+.progressPercentPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.tooltipIcon {
+  display: inline-flex;
+  align-items: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tooltipIcon:hover {
+  color: #ffffff;
+}
+
+/* Big XP Display */
+.xpBigHeader {
   display: flex;
+  justify-content: space-between;
   align-items: baseline;
-  gap: 14px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.levelNumber {
-  font-family: var(--font-display);
-  font-size: 2.2rem;
+.xpCountBlock {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.xpCurrentNumber {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 2.5rem;
   font-weight: 800;
   color: #ffffff;
   line-height: 1;
   letter-spacing: -0.02em;
 }
 
-.levelName {
-  font-family: var(--font-display);
+.xpDivider {
+  color: #64748b;
   font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.xpTargetNumber {
+  color: #fbbf24;
+  font-size: 1.25rem;
   font-weight: 700;
-  background: var(--silver-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-.goldTierHighlight {
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.heroSubtitle {
-  color: var(--text-secondary);
-  font-size: 0.88rem;
-  margin: 0;
-  max-width: 600px;
-}
-
-/* Progress Bar Container */
-.progressSection {
-  margin-top: 6px;
-}
-
-.progressHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.82rem;
-  margin-bottom: 8px;
-}
-
-.progressLabel {
-  color: var(--text-secondary);
-  display: flex;
+.remainingXpTag {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-size: 0.85rem;
+  color: #94a3b8;
 }
 
-.progressValues {
+.remainingXpTag strong {
   color: #ffffff;
-  font-weight: 700;
 }
 
-.targetTag {
-  color: var(--gold-light);
-  font-weight: 600;
+/* Progress Track Wrapper */
+.progressTrackWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  padding: 6px 0;
 }
 
 .progressBarTrack {
-  height: 12px;
-  background: rgba(15, 18, 32, 0.8);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-full);
+  height: 16px;
+  background: rgba(14, 17, 31, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.6);
 }
 
 .progressBarFill {
   height: 100%;
-  border-radius: var(--radius-full);
-  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 40%, #fbbf24 85%, #f59e0b 100%);
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 35%, #fbbf24 80%, #f59e0b 100%);
   position: relative;
   transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
 }
 
 .progressGlowHead {
@@ -232,169 +495,479 @@
   right: 0;
   top: 0;
   height: 100%;
-  width: 14px;
+  width: 18px;
   background: #ffffff;
   border-radius: 50%;
-  filter: blur(2px);
+  filter: blur(3px);
 }
 
-.progressFooter {
+.progressShimmerLight {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Milestone Nodes Row */
+.milestoneNodesRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-  font-size: 0.78rem;
+  align-items: flex-start;
+  position: relative;
+  margin-top: 4px;
 }
 
-.remainingText {
-  color: var(--text-secondary);
-}
-
-.remainingHighlight {
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.nextLevelCallout {
+.milestoneNode {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: var(--gold-light);
-  font-weight: 700;
+  gap: 8px;
 }
 
-/* Quick Metrics Row */
-.metricsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.metricCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: all var(--transition-fast);
-}
-
-.metricCard:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--border-medium);
-  transform: translateY(-2px);
-}
-
-.metricIcon {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.05);
+.nodeCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gold-light);
+  font-size: 0.7rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-.metricContent {
+.milestoneCompleted .nodeCircle {
+  background: #34d399;
+  color: #0f172a;
+}
+
+.milestoneUpcoming .nodeCircle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  color: #94a3b8;
+}
+
+.milestoneTarget .nodeCircle {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #0f172a;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+}
+
+.nodeInfo {
   display: flex;
   flex-direction: column;
 }
 
+.nodeLevel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.nodeXp {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+/* Next Tier Teaser Card */
+.nextTierTeaserCard {
+  background: rgba(30, 36, 64, 0.65);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 18px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 20px rgba(245, 158, 11, 0.08);
+}
+
+.teaserLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.teaserIconWrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.teaserContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.teaserTag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
+
+.teaserLevelPill {
+  background: rgba(245, 158, 11, 0.2);
+  padding: 2px 7px;
+  border-radius: 9999px;
+  color: #ffffff;
+}
+
+.teaserTitle {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.teaserDesc {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.teaserDesc strong {
+  color: #f1f5f9;
+}
+
+.teaserInspectBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.teaserInspectBtn:hover {
+  background: #f59e0b;
+  color: #0f172a;
+}
+
+/* 4-Card Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metricCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metricCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.metricCardPurple:hover::before {
+  background: #a855f7;
+  opacity: 1;
+}
+
+.metricCardGold:hover::before {
+  background: #fbbf24;
+  opacity: 1;
+}
+
+.metricCardBlue:hover::before {
+  background: #38bdf8;
+  opacity: 1;
+}
+
+.metricCardGreen:hover::before {
+  background: #34d399;
+  opacity: 1;
+}
+
+.metricCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.metricIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metricCardPurple .metricIconBox {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+}
+
+.metricCardGold .metricIconBox {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+
+.metricCardBlue .metricIconBox {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+.metricCardGreen .metricIconBox {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+}
+
+.metricDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .metricLabel {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: #94a3b8;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 
 .metricValue {
-  font-size: 1.05rem;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 1.35rem;
   font-weight: 800;
   color: #ffffff;
   line-height: 1.2;
 }
 
-/* Next Action Banner */
-.actionBanner {
-  margin-top: 18px;
-  background: rgba(56, 189, 248, 0.08);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  border-radius: var(--radius-md);
-  padding: 10px 16px;
+.goldVal {
+  color: #fbbf24;
+}
+
+.blueVal {
+  color: #38bdf8;
+}
+
+.greenVal {
+  color: #34d399;
+}
+
+.metricContext {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Action Recommendation Banner */
+.actionRecommendationBanner {
+  margin-top: 24px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.1) 0%, rgba(129, 140, 248, 0.08) 60%, rgba(245, 158, 11, 0.08) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 16px;
+  padding: 16px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-.actionBannerText {
+.actionBannerLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.actionSparkleIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.actionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.actionTitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.actionMessage {
   font-size: 0.82rem;
-  color: #e0f2fe;
+  color: #cbd5e1;
+  margin: 0;
+  line-height: 1.45;
 }
 
-.actionBannerBtn {
-  background: rgba(56, 189, 248, 0.18);
-  color: var(--accent-blue);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
+.highlightWhite {
+  color: #ffffff;
+}
+
+.highlightGold {
+  color: #fbbf24;
+}
+
+.highlightCyan {
+  color: #38bdf8;
+}
+
+.actionBannerButtons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.actionConvertBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  transition: all 0.2s ease;
+}
+
+.actionConvertBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.6);
+  filter: brightness(1.1);
+}
+
+.actionPlayBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.82rem;
   font-weight: 700;
-  transition: all var(--transition-fast);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.actionBannerBtn:hover {
-  background: var(--accent-blue);
-  color: #0f172a;
+.actionPlayBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
-/* Responsive queries */
-@media (max-width: 991px) {
-  .heroGrid {
+/* Responsive Queries */
+@media (max-width: 1024px) {
+  .masterGrid {
     grid-template-columns: 1fr;
-    text-align: center;
+    gap: 32px;
   }
-  .crestContainer {
-    margin: 0 auto;
-  }
-  .badgeRow, .levelTitleGroup {
-    justify-content: center;
-  }
-  .heroSubtitle {
-    margin: 0 auto;
+  .crestShowcaseCol {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 28px;
   }
   .metricsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 575px) {
-  .heroCard {
-    padding: 20px 16px;
+@media (max-width: 768px) {
+  .masterCard {
+    padding: 24px 18px;
+    border-radius: 20px;
   }
-  .levelNumber {
-    font-size: 1.8rem;
+  .sectionTopHeader {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .levelName {
-    font-size: 1.25rem;
+  .sectionMainTitle {
+    font-size: 1.6rem;
+  }
+  .xpBigHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .xpCurrentNumber {
+    font-size: 2rem;
+  }
+  .nextTierTeaserCard {
+    flex-direction: column;
+    align-items: flex-start;
   }
   .metricsGrid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
-  .actionBanner {
+  .actionRecommendationBanner {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .actionBannerButtons {
+    width: 100%;
+    flex-direction: column;
+  }
+  .actionConvertBtn, .actionPlayBtn {
+    width: 100%;
+    justify-content: center;
   }
 }
