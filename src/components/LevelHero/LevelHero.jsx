@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Sparkles,
-  ArrowRight,
   TrendingUp,
   Zap,
   Coins,
@@ -45,16 +44,6 @@ export default function LevelHero() {
   const tierMultiplier = (1 + (currentLevel.level - 1) * 0.05).toFixed(2);
   const potentialCoins = Math.floor(gamePointsBalance * 0.1);
   const potentialXp = Math.floor(gamePointsBalance * 0.25);
-
-  const scrollToConverter = () => {
-    const el = document.getElementById('points-converter');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToArcade = () => {
-    const el = document.getElementById('arcade-games');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const scrollToRoadmap = () => {
     const el = document.getElementById('roadmap');
@@ -288,9 +277,6 @@ export default function LevelHero() {
                       <h4 className={styles.teaserTitle}>
                         {nextLevel.rewardTitle}
                       </h4>
-                      <p className={styles.teaserDesc}>
-                        Unlocks an upgraded <strong>1.25x earning boost</strong> across all activities, VIP sub-minute withdrawals, and a $25 credit voucher.
-                      </p>
                     </div>
                   </div>
 
@@ -375,40 +361,6 @@ export default function LevelHero() {
             </div>
           </div>
 
-          {/* Action Recommendation Banner */}
-          <div className={styles.actionRecommendationBanner}>
-            <div className={styles.actionBannerLeft}>
-              <div className={styles.actionSparkleIcon}>
-                <Sparkles size={18} />
-              </div>
-              <div className={styles.actionContent}>
-                <span className={styles.actionTitle}>
-                  Recommended Next Action: Convert Your Vault Points
-                </span>
-                <p className={styles.actionMessage}>
-                  You have <strong className={styles.highlightWhite}>{gamePointsBalance} arcade points</strong> waiting. Exchange them now to instantly receive <strong className={styles.highlightGold}>+{potentialCoins} VE Coins</strong> and <strong className={styles.highlightCyan}>+{potentialXp} XP</strong> towards Level {nextLevel ? nextLevel.level : 'Max'}.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.actionBannerButtons}>
-              <button
-                onClick={scrollToConverter}
-                className={styles.actionConvertBtn}
-              >
-                <Coins size={15} />
-                <span>Convert Points Now</span>
-                <ArrowRight size={14} />
-              </button>
-
-              <button
-                onClick={scrollToArcade}
-                className={styles.actionPlayBtn}
-              >
-                <span>Play Games</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </section>

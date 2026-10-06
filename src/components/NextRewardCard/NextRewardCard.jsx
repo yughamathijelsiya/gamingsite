@@ -57,7 +57,7 @@ export default function NextRewardCard() {
               </h2>
 
               <p className={styles.rewardDescription}>
-                Elevate your status from <strong>{currentLevel.name}</strong> to <strong>{nextLevel.name}</strong>. Reaching Level {nextLevel.level} unlocks an instantaneous $25 credit voucher, an upgraded 1.25x earning boost across all activities, and expedited sub-minute withdrawals.
+                Advance from <strong>{currentLevel.name}</strong> to <strong>{nextLevel.name}</strong> — {remainingXp.toLocaleString()} XP to go.
               </p>
 
               {/* Highlighted Perks List */}
@@ -95,17 +95,13 @@ export default function NextRewardCard() {
 
               {/* Action Buttons */}
               <div className={styles.ctaRow}>
-                <a href="#play-earn" className={styles.actionBtn}>
-                  <span>Earn XP in VE Coin Catch</span>
-                  <ArrowRight size={14} />
-                </a>
-
                 <button
-                  className={styles.secondaryBtn}
+                  className={styles.actionBtn}
                   onClick={() => openLevelModal(nextLevel)}
                 >
                   <Gift size={14} />
                   <span>Inspect Tier Perks</span>
+                  <ArrowRight size={14} />
                 </button>
               </div>
             </div>

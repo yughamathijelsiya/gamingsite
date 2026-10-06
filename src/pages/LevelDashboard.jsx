@@ -76,8 +76,8 @@ export default function LevelDashboard() {
         <div className="container">
           <div className={styles.footerContainer}>
             <div className={styles.footerLeft}>
-              <span className={styles.footerBrand}>VELOOP Rewards & Arcade Ecosystem</span>
-              <span>Sophisticated fintech tier incentives, 3D arcade games, and points conversion.</span>
+              <span className={styles.footerBrand}>VELOOP Rewards & Arcade</span>
+              <span>Skill-based games, tier incentives & points conversion.</span>
             </div>
 
             <div className={styles.footerRight}>
@@ -85,13 +85,11 @@ export default function LevelDashboard() {
               <a href="#roadmap" className={styles.footerLink}>Tier Roadmap</a>
               <a href="#arcade-games" className={styles.footerLink}>Arcade Games</a>
               <a href="#points-converter" className={styles.footerLink}>Points Converter</a>
-              <a href="#earning-hub" className={styles.footerLink}>Earning Hub</a>
-              <a href="#activity-feed" className={styles.footerLink}>Activity Ledger</a>
             </div>
           </div>
 
           <div className={styles.disclaimerBanner}>
-            *Disclaimer: All XP values, multiplier boosts, VE Coins, and reward vouchers displayed in this dashboard are part of the VELOOP Rewards simulation model. Cyber Surfers: Neon Run and VE Coin Catch are 100% skill-based frontend arcade games and contain zero gambling, betting, casino mechanics, or real cash wagering. VELOOP Inc. © 2026. All rights reserved.
+            All XP, VE Coins and rewards are simulation values. Arcade games are 100% skill-based with no gambling or real-cash wagering. VELOOP Inc. © 2026.
           </div>
         </div>
       </footer>

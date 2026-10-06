@@ -3,11 +3,9 @@ import {
   Gamepad2,
   Coins,
   ArrowRight,
-  ShieldCheck,
   Zap,
   Flame,
   CheckCircle2,
-  Gift,
   ArrowUpRight
 } from 'lucide-react';
 import { useRewards } from '../../context/RewardsContext';
@@ -29,8 +27,6 @@ export default function HeroBanner() {
   } = useRewards();
 
   const tierMultiplier = (1 + (currentLevel.level - 1) * 0.05).toFixed(2);
-  const potentialCoins = Math.floor(gamePointsBalance * 0.1);
-  const potentialXp = Math.floor(gamePointsBalance * 0.25);
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -79,8 +75,7 @@ export default function HeroBanner() {
 
               {/* Description */}
               <p className={styles.bannerSubtitle}>
-                Master <strong>5 skill-based arcade games</strong>, convert your game points into spendable{' '}
-                <strong className={styles.goldText}>VE Coins</strong> and <strong className={styles.cyanText}>Level XP</strong>, and climb <strong>10 exclusive tiers</strong> from Bronze to Obsidian.
+                Play arcade games, earn <strong className={styles.goldText}>VE Coins</strong> &amp; <strong className={styles.cyanText}>XP</strong>, and climb <strong>10 exclusive tiers</strong>.
               </p>
 
               {/* Action Buttons */}
@@ -95,41 +90,12 @@ export default function HeroBanner() {
                 </button>
 
                 <button
-                  onClick={() => scrollToSection('points-converter')}
-                  className={styles.secondaryConvertBtn}
-                  title={`Convert ${gamePointsBalance} arcade points to +${potentialCoins} VE Coins & +${potentialXp} XP`}
-                >
-                  <Coins size={18} />
-                  <span>
-                    Convert Points (+{potentialCoins} VE)
-                  </span>
-                </button>
-
-                <button
                   onClick={() => scrollToSection('roadmap')}
                   className={styles.tertiaryLinkBtn}
                 >
-                  <span>10-Tier Roadmap</span>
+                  <span>View 10-Tier Roadmap</span>
                   <ArrowUpRight size={15} />
                 </button>
-              </div>
-
-              {/* Micro-Features Row */}
-              <div className={styles.featuresRow}>
-                <div className={styles.featureItem}>
-                  <ShieldCheck size={16} className={styles.featureIconGreen} />
-                  <span>100% Skill-Based Games</span>
-                </div>
-                <div className={styles.featureDivider} />
-                <div className={styles.featureItem}>
-                  <Zap size={16} className={styles.featureIconGold} />
-                  <span>Sub-Minute VIP Settlements</span>
-                </div>
-                <div className={styles.featureDivider} />
-                <div className={styles.featureItem}>
-                  <Gift size={16} className={styles.featureIconBlue} />
-                  <span>Up to 2.0x Lifetime Multiplier</span>
-                </div>
               </div>
             </div>
 
